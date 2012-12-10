@@ -34,36 +34,36 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 
 	// create a global reference to the JavaClass object and fetch method id(s)..
 	JavaClass			= jni_env->NewGlobalRef(obj_JavaClass);
-	toggleDdpMethod		= jni_env->GetMethodID(cls_JavaClass, "toggleDolbyDigitalPlus", "()Ljava/lang/String;");
+	toggleDdpMethod		= jni_env->GetMethodID(cls_JavaClass, "toggleDolbyDigitalPlus", "()Z");
 	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] JavaClass global ref = %08x\n", __FUNCTION__, JavaClass);
 	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] JavaClass method id = %08x\n", __FUNCTION__, toggleDdpMethod);
 	
 	return JNI_VERSION_1_6;		// minimum JNI version
 }
 
-const char* toggleDolbyDigitalPlus()
+const bool toggleDolbyDigitalPlus()
 {
 	JNIEnv* jni_env = 0;
 	java_vm->AttachCurrentThread(&jni_env, 0);
 
 	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] called, attached to %08x\n", __FUNCTION__, jni_env);
 
-	jstring java_rtn 	= (jstring)jni_env->CallObjectMethod(JavaClass, toggleDdpMethod);
+	jboolean java_rtn 	= (jboolean)jni_env->CallObjectMethod(JavaClass, toggleDdpMethod);
 	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] java_rtn = %08x\n", __FUNCTION__, java_rtn);
 	
-	jsize stringLen = jni_env->GetStringUTFLength(java_rtn);
-	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] stringLen = %i\n", __FUNCTION__, stringLen);
+//	jsize stringLen = jni_env->GetStringUTFLength(java_rtn);
+//	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] stringLen = %i\n", __FUNCTION__, stringLen);
+//	
+//	char* rtnStr = new char[stringLen+1];
+//	
+//	const char* path = jni_env->GetStringUTFChars(java_rtn, 0);
+//	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] path = %s\n", __FUNCTION__, path);
+//	
+//	strcpy(rtnStr, path);
+//
+//	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] return value is = %i\n", __FUNCTION__, rtnStr);
 	
-	char* rtnStr = new char[stringLen+1];
-	
-	const char* path = jni_env->GetStringUTFChars(java_rtn, 0);
-	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] path = %s\n", __FUNCTION__, path);
-	
-	strcpy(rtnStr, path);
-
-	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] return value is = %i\n", __FUNCTION__, rtnStr);
-	
-	return rtnStr;
+	return (bool)(java_rtn != JNI_FALSE);
 }
 
 } // extern "C"

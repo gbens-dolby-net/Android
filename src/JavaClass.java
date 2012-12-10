@@ -77,7 +77,7 @@ public class JavaClass implements IDsClientEvents {
 		Log.d(TAG, "Dolby profile " + profile + " settings changed.");
 	}
 
-	public String toggleDolbyDigitalPlus() {
+	public boolean toggleDolbyDigitalPlus() {
 		try {
 			mDolbyClient.setDolbySurroundOn( ! mDdpActive);
 			mDdpActive = ! mDdpActive;
@@ -86,6 +86,6 @@ public class JavaClass implements IDsClientEvents {
 			Log.e(TAG, "Excep trying to toggle Dolby Digital Plus");
 			e.printStackTrace();
 		}
-		return mDdpActive ? "Dolby Digital Plus is ON" : "Dolby Digital Plus is off";
+		return mDdpActive;
 	}
 }

@@ -6,7 +6,7 @@ include $(CLEAR_VARS)
 LOCAL_ARM_MODE  := arm
 LOCAL_PATH      := $(NDK_PROJECT_PATH)
 LOCAL_MODULE    := libjavabridge
-LOCAL_CFLAGS    := -Werror
+LOCAL_CFLAGS    := -fpermissive
 LOCAL_SRC_FILES := NativeJavaBridge.cpp
 LOCAL_LDLIBS    := -llog
 
