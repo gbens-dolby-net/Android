@@ -50,19 +50,7 @@ const bool toggleDolbyDigitalPlus()
 
 	jboolean java_rtn 	= (jboolean)jni_env->CallObjectMethod(JavaClass, toggleDdpMethod);
 	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] java_rtn = %08x\n", __FUNCTION__, java_rtn);
-	
-//	jsize stringLen = jni_env->GetStringUTFLength(java_rtn);
-//	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] stringLen = %i\n", __FUNCTION__, stringLen);
-//	
-//	char* rtnStr = new char[stringLen+1];
-//	
-//	const char* path = jni_env->GetStringUTFChars(java_rtn, 0);
-//	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] path = %s\n", __FUNCTION__, path);
-//	
-//	strcpy(rtnStr, path);
-//
-//	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] return value is = %i\n", __FUNCTION__, rtnStr);
-	
+
 	return (bool)(java_rtn != JNI_FALSE);
 }
 
