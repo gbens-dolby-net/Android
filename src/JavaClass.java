@@ -1,4 +1,4 @@
-package org.example.ScriptBridge;
+package com.dolby.ddpexample;
 
 import android.app.Activity;
 import android.os.Looper;
@@ -13,16 +13,12 @@ public class JavaClass implements IDsClientEvents {
 
 	private Activity mActivity;
 	private DolbySurroundClient mDolbyClient;
-	private boolean mDolbySurroundActive;
+	private boolean mDdpActive;
 
 	public JavaClass(Activity currentActivity) {
 		Log.i("JavaClass", "Constructor called with currentActivity = " + currentActivity);
 		
 		mActivity = currentActivity;
-
-//		mDolbyClient = new DolbySurroundClient();
-//		mDolbyClient.bindToRemoteRunningService(mActivity);
-//		mDolbyClient.setEventListener(this);
 
 		// GKB: Needs to run on UI thread since DSClient requires a Handler()
 		mActivity.runOnUiThread(new Runnable() {
@@ -43,36 +39,12 @@ public class JavaClass implements IDsClientEvents {
 		});
 	}
 
-	//	// we could of course do this straight from native code using JNI, but this is an example so.. ;)
-	//	public String getActivityCacheDir()
-	//	{
-	//		// calling Context.getCacheDir();
-	//		// http://developer.android.com/reference/android/content/Context.html#getCacheDir()
-	//		//
-	//		final File cacheDir = mActivity.getCacheDir();
-	//		final String path = cacheDir.getPath();
-	//		Log.i(TAG, "getActivityCacheDir returns = " + path);
-	//		return path;
-	//	}
-
-	public String toggleDolbySurround() {
-		try {
-			mDolbyClient.setDolbySurroundOn( ! mDolbySurroundActive);
-			mDolbySurroundActive = ! mDolbySurroundActive;
-		}
-		catch (Exception e) {
-			Log.e(TAG, "Excep trying to toggle Dolby Surround");
-			e.printStackTrace();
-		}
-		return mDolbySurroundActive ? "DolbySurround is ON" : "DolbySurround is off";
-	}
-
 	@Override
 	public void onClientConnected() {
 		Log.v(TAG, "Dolby client connected");
 		try {
 			mDolbyClient.setSelectedProfile(2);
-			mDolbySurroundActive = mDolbyClient.getDolbySurroundOn();
+			mDdpActive = mDolbyClient.getDolbySurroundOn();
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Exception setting profile: " + e.getMessage());
@@ -103,5 +75,17 @@ public class JavaClass implements IDsClientEvents {
 	@Override
 	public void onProfileSettingsChanged(int profile) {
 		Log.d(TAG, "Dolby profile " + profile + " settings changed.");
+	}
+
+	public String toggleDolbyDigitalPlus() {
+		try {
+			mDolbyClient.setDolbySurroundOn( ! mDdpActive);
+			mDdpActive = ! mDdpActive;
+		}
+		catch (Exception e) {
+			Log.e(TAG, "Excep trying to toggle Dolby Digital Plus");
+			e.printStackTrace();
+		}
+		return mDdpActive ? "Dolby Digital Plus is ON" : "Dolby Digital Plus is off";
 	}
 }

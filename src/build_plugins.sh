@@ -6,10 +6,10 @@ javac JavaClass.java -classpath ../DolbySurround.jar -bootclasspath $ANDROID_SDK
 echo ""
 echo "Signature dump of JavaClass..."
 
-javap -s org.example.ScriptBridge.JavaClass
+javap -s com.dolby.ddpexample.JavaClass
 
 echo "Creating JavaClass.jar..."
-jar cvfM ../JavaClass.jar org/
+jar cvfM ../JavaClass.jar com/
 
 echo ""
 echo "Compiling NativeJavaBridge.cpp..."
@@ -21,6 +21,7 @@ echo "Cleaning up / removing build folders..."  #optional..
 rm -rf libs
 rm -rf obj
 rm -rf org
+rm -rf com
 
 echo ""
 echo "Done!"
