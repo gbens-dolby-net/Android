@@ -8,6 +8,9 @@ extern "C"
 JavaVM*		java_vm;
 jobject		JavaClass;
 jmethodID	toggleDdpMethod;
+jmethodID	toggleDialogEnhancerMethod;
+jmethodID	toggleVolumeLevellerMethod;
+jmethodID	toggleVirtualizerMethod;
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
 {
@@ -35,9 +38,15 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	// create a global reference to the JavaClass object and fetch method id(s)..
 	JavaClass			= jni_env->NewGlobalRef(obj_JavaClass);
 	toggleDdpMethod		= jni_env->GetMethodID(cls_JavaClass, "toggleDolbyDigitalPlus", "()Z");
+	toggleDialogEnhancerMethod	= jni_env->GetMethodID(cls_JavaClass, "toggleDialogEnhancer", "()Z");
+	toggleVolumeLevellerMethod	= jni_env->GetMethodID(cls_JavaClass, "toggleVolumeLeveller", "()Z");
+	toggleVirtualizerMethod		= jni_env->GetMethodID(cls_JavaClass, "toggleVirtualizer", "()Z");
 	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] JavaClass global ref = %08x\n", __FUNCTION__, JavaClass);
-	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] JavaClass method id = %08x\n", __FUNCTION__, toggleDdpMethod);
-	
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] toggleDdpMethod method id = %08x\n", __FUNCTION__, toggleDdpMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] toggleDialogEnhancerMethod method id = %08x\n", __FUNCTION__, toggleDialogEnhancerMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] toggleVolumeLevellerMethod method id = %08x\n", __FUNCTION__, toggleVolumeLevellerMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] toggleVirtualizerMethod method id = %08x\n", __FUNCTION__, toggleVirtualizerMethod);
+
 	return JNI_VERSION_1_6;		// minimum JNI version
 }
 
@@ -49,6 +58,45 @@ const bool toggleDolbyDigitalPlus()
 	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] called, attached to %08x\n", __FUNCTION__, jni_env);
 
 	jboolean java_rtn 	= (jboolean)jni_env->CallObjectMethod(JavaClass, toggleDdpMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] java_rtn = %08x\n", __FUNCTION__, java_rtn);
+
+	return (bool)(java_rtn != JNI_FALSE);
+}
+
+const bool toggleDialogEnhancer()
+{
+	JNIEnv* jni_env = 0;
+	java_vm->AttachCurrentThread(&jni_env, 0);
+
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] called, attached to %08x\n", __FUNCTION__, jni_env);
+
+	jboolean java_rtn 	= (jboolean)jni_env->CallObjectMethod(JavaClass, toggleDialogEnhancerMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] java_rtn = %08x\n", __FUNCTION__, java_rtn);
+
+	return (bool)(java_rtn != JNI_FALSE);
+}
+
+const bool toggleVolumeLeveller()
+{
+	JNIEnv* jni_env = 0;
+	java_vm->AttachCurrentThread(&jni_env, 0);
+
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] called, attached to %08x\n", __FUNCTION__, jni_env);
+
+	jboolean java_rtn 	= (jboolean)jni_env->CallObjectMethod(JavaClass, toggleVolumeLevellerMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] java_rtn = %08x\n", __FUNCTION__, java_rtn);
+
+	return (bool)(java_rtn != JNI_FALSE);
+}
+
+const bool toggleVirtualizer()
+{
+	JNIEnv* jni_env = 0;
+	java_vm->AttachCurrentThread(&jni_env, 0);
+
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] called, attached to %08x\n", __FUNCTION__, jni_env);
+
+	jboolean java_rtn 	= (jboolean)jni_env->CallObjectMethod(JavaClass, toggleVirtualizerMethod);
 	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] java_rtn = %08x\n", __FUNCTION__, java_rtn);
 
 	return (bool)(java_rtn != JNI_FALSE);
