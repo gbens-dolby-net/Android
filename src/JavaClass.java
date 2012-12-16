@@ -22,9 +22,13 @@ public class JavaClass implements IDsClientEvents {
 	private boolean mDialogEnhancerActive;
 	private boolean mVolumeLevellerActive;
 	private boolean mVirtualizerActive;
+	
+	private int mCurrentProfileId;
+	private int mProfileCount;
+	private String[] mProfileNames;
 
 	public JavaClass(Activity currentActivity) {
-		Log.i("JavaClass", "Constructor called with currentActivity = " + currentActivity);
+		Log.i(TAG, "Constructor called with currentActivity = " + currentActivity);
 		
 		mActivity = currentActivity;
 
@@ -33,11 +37,11 @@ public class JavaClass implements IDsClientEvents {
 			@Override
 			public void run() {
 				try {
-					Log.i("JavaClass", "Creating DS client on main thread");
+					Log.i(TAG, "Creating DS client on main thread");
 					mDolbyClient = new DolbySurroundClient();
 					mDolbyClient.bindToRemoteRunningService(mActivity);
 					mDolbyClient.setEventListener(JavaClass.this);
-					Log.i("JavaClass", "DS client created");
+					Log.i(TAG, "DS client created");
 				}
 				catch (Exception e) {
 					Log.e(TAG, "Exception creating DS client: " + e.getMessage());
@@ -58,6 +62,10 @@ public class JavaClass implements IDsClientEvents {
 			mDialogEnhancerActive = mProfileSettings.getDialogEnhancerOn();
 			mVolumeLevellerActive = mProfileSettings.getVolumeLevellerOn();
 			mVirtualizerActive = mProfileSettings.getVirtualizerOn();
+			
+			mCurrentProfileId = mDolbyClient.getSelectedProfile();
+			mProfileCount = mDolbyClient.getProfileCount();
+			mProfileNames = mDolbyClient.getProfileNames();
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Exception setting profile: " + e.getMessage());
@@ -94,6 +102,7 @@ public class JavaClass implements IDsClientEvents {
 		try {
 			mDolbyClient.setDolbySurroundOn( ! mDdpActive);
 			mDdpActive = ! mDdpActive;
+			Log.v(TAG, "Toggling Dolby Digital Plus - " + mDdpActive);
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Excep trying to toggle Dolby Digital Plus");
@@ -102,10 +111,42 @@ public class JavaClass implements IDsClientEvents {
 		return mDdpActive;
 	}
 
+	/**
+	 * @return Name of the newly-selected profile
+	 */
+	public String cycleDdpProfile() {
+		String rtn = "Error";
+		try {
+			mCurrentProfileId = (mCurrentProfileId + 1) % mProfileCount;
+			mDolbyClient.setSelectedProfile(mCurrentProfileId);
+			rtn = mProfileNames[mCurrentProfileId];
+			Log.v(TAG, "Cycling to profile " + mCurrentProfileId + ", " + rtn);
+		}
+		catch (Exception e) {
+			Log.e(TAG, "Excep trying to cycle Ddp Profile");
+			e.printStackTrace();
+		}
+		return rtn;
+	}
+
+	public boolean getDialogEnhancerOn() {
+		boolean rtn = false;
+		try {
+			rtn = mProfileSettings.getDialogEnhancerOn();
+			Log.v(TAG, "Dialog Enhancer is " + rtn);
+		}
+		catch (Exception e) {
+			Log.e(TAG, "Excep trying to get dialog enhancer");
+			e.printStackTrace();
+		}
+		return rtn;
+	}
+
 	public boolean toggleDialogEnhancer() {
-	try {
+		try {
 			mProfileSettings.setDialogEnhancerOn( ! mDialogEnhancerActive);
 			mDialogEnhancerActive = ! mDialogEnhancerActive;
+			Log.v(TAG, "Toggling Dialog Enhancer - " + mDdpActive);
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Excep trying to toggle dialog enhancer");
@@ -114,10 +155,24 @@ public class JavaClass implements IDsClientEvents {
 		return mDialogEnhancerActive;
 	}
 
+	public boolean getVolumeLevellerOn() {
+		boolean rtn = false;
+		try {
+			rtn = mProfileSettings.getVolumeLevellerOn();
+			Log.v(TAG, "Volume Leveller is " + rtn);
+		}
+		catch (Exception e) {
+			Log.e(TAG, "Excep trying to get volume leveller");
+			e.printStackTrace();
+		}
+		return rtn;
+	}
+
 	public boolean toggleVolumeLeveller() {
 		try {
 			mProfileSettings.setVolumeLevellerOn( ! mVolumeLevellerActive);
 			mVolumeLevellerActive = ! mVolumeLevellerActive;
+			Log.v(TAG, "Toggling Volume Leveler - " + mDdpActive);
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Excep trying to toggle volume leveller");
@@ -126,10 +181,24 @@ public class JavaClass implements IDsClientEvents {
 		return mVolumeLevellerActive;
 	}
 
+	public boolean getVirtualizerOn() {
+		boolean rtn = false;
+		try {
+			rtn = mProfileSettings.getVirtualizerOn();
+			Log.v(TAG, "Virtualizer is " + rtn);
+		}
+		catch (Exception e) {
+			Log.e(TAG, "Excep trying to get virtualizer");
+			e.printStackTrace();
+		}
+		return rtn;
+	}
+
 	public boolean toggleVirtualizer() {
 		try {
 			mProfileSettings.setVirtualizerOn( ! mVirtualizerActive);
 			mVirtualizerActive = ! mVirtualizerActive;
+			Log.v(TAG, "Toggling Surround Virtualizer - " + mDdpActive);
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Excep trying to toggle virtualizer");
