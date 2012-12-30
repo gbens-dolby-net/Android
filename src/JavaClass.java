@@ -1,13 +1,10 @@
 package com.dolby.ddpexample;
 
 import android.app.Activity;
-import android.os.Looper;
-import android.util.Log;
-import java.io.File;
-
 import android.media.dolby.DolbySurroundClient;
 import android.media.dolby.DsClientSettings;
 import android.media.dolby.IDsClientEvents;
+import android.util.Log;
 
 public class JavaClass implements IDsClientEvents {
 	private static final String TAG = JavaClass.class.getSimpleName();
@@ -17,19 +14,19 @@ public class JavaClass implements IDsClientEvents {
 	private Activity mActivity;
 	private DolbySurroundClient mDolbyClient;
 	private DsClientSettings mProfileSettings;
-	
+
 	private boolean mDdpActive;
 	private boolean mDialogEnhancerActive;
 	private boolean mVolumeLevellerActive;
 	private boolean mVirtualizerActive;
-	
+
 	private int mCurrentProfileId;
 	private int mProfileCount;
 	private String[] mProfileNames;
 
 	public JavaClass(Activity currentActivity) {
 		Log.i(TAG, "Constructor called with currentActivity = " + currentActivity);
-		
+
 		mActivity = currentActivity;
 
 		// GKB: Needs to run on UI thread since DSClient requires a Handler()
@@ -57,12 +54,12 @@ public class JavaClass implements IDsClientEvents {
 		try {
 			mDolbyClient.setSelectedProfile(GAME_PROFILE);
 			mDdpActive = mDolbyClient.getDolbySurroundOn();
-			
+
 			mProfileSettings = mDolbyClient.getProfileSettings(GAME_PROFILE);
 			mDialogEnhancerActive = mProfileSettings.getDialogEnhancerOn();
 			mVolumeLevellerActive = mProfileSettings.getVolumeLevellerOn();
 			mVirtualizerActive = mProfileSettings.getVirtualizerOn();
-			
+
 			mCurrentProfileId = mDolbyClient.getSelectedProfile();
 			mProfileCount = mDolbyClient.getProfileCount();
 			mProfileNames = mDolbyClient.getProfileNames();
@@ -146,7 +143,7 @@ public class JavaClass implements IDsClientEvents {
 		try {
 			mProfileSettings.setDialogEnhancerOn( ! mDialogEnhancerActive);
 			mDialogEnhancerActive = ! mDialogEnhancerActive;
-			Log.v(TAG, "Toggling Dialog Enhancer - " + mDdpActive);
+			Log.v(TAG, "Toggling Dialog Enhancer - " + mDialogEnhancerActive);
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Excep trying to toggle dialog enhancer");
@@ -172,7 +169,7 @@ public class JavaClass implements IDsClientEvents {
 		try {
 			mProfileSettings.setVolumeLevellerOn( ! mVolumeLevellerActive);
 			mVolumeLevellerActive = ! mVolumeLevellerActive;
-			Log.v(TAG, "Toggling Volume Leveler - " + mDdpActive);
+			Log.v(TAG, "Toggling Volume Leveler - " + mVolumeLevellerActive);
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Excep trying to toggle volume leveller");
@@ -198,7 +195,7 @@ public class JavaClass implements IDsClientEvents {
 		try {
 			mProfileSettings.setVirtualizerOn( ! mVirtualizerActive);
 			mVirtualizerActive = ! mVirtualizerActive;
-			Log.v(TAG, "Toggling Surround Virtualizer - " + mDdpActive);
+			Log.v(TAG, "Toggling Surround Virtualizer - " + mVirtualizerActive);
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Excep trying to toggle virtualizer");
