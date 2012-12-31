@@ -7,10 +7,14 @@ extern "C"
 
 JavaVM*		java_vm;
 jobject		JavaClass;
+
 jmethodID	toggleDdpMethod;
 jmethodID	toggleDialogEnhancerMethod;
 jmethodID	toggleVolumeLevellerMethod;
 jmethodID	toggleVirtualizerMethod;
+
+jmethodID	cycleDdpProfileMethod;
+jmethodID	getCurrentProfileNameMethod;
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
 {
@@ -36,18 +40,59 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] JavaClass object = %08x\n", __FUNCTION__, obj_JavaClass);
 
 	// create a global reference to the JavaClass object and fetch method id(s)..
-	JavaClass			= jni_env->NewGlobalRef(obj_JavaClass);
-	toggleDdpMethod		= jni_env->GetMethodID(cls_JavaClass, "toggleDolbyDigitalPlus", "()Z");
+	JavaClass					= jni_env->NewGlobalRef(obj_JavaClass);
+	toggleDdpMethod				= jni_env->GetMethodID(cls_JavaClass, "toggleDolbyDigitalPlus", "()Z");
 	toggleDialogEnhancerMethod	= jni_env->GetMethodID(cls_JavaClass, "toggleDialogEnhancer", "()Z");
 	toggleVolumeLevellerMethod	= jni_env->GetMethodID(cls_JavaClass, "toggleVolumeLeveller", "()Z");
 	toggleVirtualizerMethod		= jni_env->GetMethodID(cls_JavaClass, "toggleVirtualizer", "()Z");
-	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] JavaClass global ref = %08x\n", __FUNCTION__, JavaClass);
-	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] toggleDdpMethod method id = %08x\n", __FUNCTION__, toggleDdpMethod);
-	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] toggleDialogEnhancerMethod method id = %08x\n", __FUNCTION__, toggleDialogEnhancerMethod);
-	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] toggleVolumeLevellerMethod method id = %08x\n", __FUNCTION__, toggleVolumeLevellerMethod);
-	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] toggleVirtualizerMethod method id = %08x\n", __FUNCTION__, toggleVirtualizerMethod);
+	cycleDdpProfileMethod		= jni_env->GetMethodID(cls_JavaClass, "cycleDdpProfile", "()Ljava/lang/String;");
+	getCurrentProfileNameMethod	= jni_env->GetMethodID(cls_JavaClass, "getCurrentProfileName", "()Ljava/lang/String;");
+	
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "Method: %s", __FUNCTION__);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "JavaClass global ref = %08x\n", JavaClass);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "toggleDdpMethod method id = %08x\n", toggleDdpMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "toggleDialogEnhancerMethod method id = %08x\n", toggleDialogEnhancerMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "toggleVolumeLevellerMethod method id = %08x\n", toggleVolumeLevellerMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "toggleVirtualizerMethod method id = %08x\n", toggleVirtualizerMethod);
+
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "cycleDdpProfileMethod method id = %08x\n", cycleDdpProfileMethod);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "getCurrentProfileNameMethod method id = %08x\n", getCurrentProfileNameMethod);
 
 	return JNI_VERSION_1_6;		// minimum JNI version
+}
+
+const char* callMethodWithStringReturn(jmethodID methodID)
+{
+	JNIEnv* jni_env = 0;
+	java_vm->AttachCurrentThread(&jni_env, 0);
+
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] called, attached to %08x\n", __FUNCTION__, jni_env);
+
+	jstring str_jniResult 	= (jstring)jni_env->CallObjectMethod(JavaClass, methodID);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] str_jniResult = %08x\n", __FUNCTION__, str_jniResult);
+	
+	jsize stringLen = jni_env->GetStringUTFLength(str_jniResult);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] stringLen = %i\n", __FUNCTION__, stringLen);
+	
+	char* rtnStr = new char[stringLen+1];
+	
+	const char* jni_utfChars = jni_env->GetStringUTFChars(str_jniResult, 0);
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] jni_utfChars = %s\n", __FUNCTION__, jni_utfChars);
+	
+	strcpy(rtnStr, jni_utfChars);
+
+	__android_log_print(ANDROID_LOG_INFO, "JavaBridge", "[%s] return value is = %i\n", __FUNCTION__, rtnStr);
+	return rtnStr;
+}
+
+const char* cycleDdpProfile()
+{
+	return callMethodWithStringReturn(cycleDdpProfileMethod);
+}
+
+const char* getCurrentProfileName()
+{
+	return callMethodWithStringReturn(getCurrentProfileNameMethod);
 }
 
 const bool toggleDolbyDigitalPlus()

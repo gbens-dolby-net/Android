@@ -130,6 +130,10 @@ public class JavaClass implements IDsClientEvents {
 		return rtn;
 	}
 
+	public String getCurrentProfileName() {
+		return mProfileNames[mCurrentProfileId];
+	}
+
 	public boolean getDialogEnhancerOn() {
 		boolean rtn = mCurrSettings.getDialogEnhancerOn();
 		Log.v(TAG, "Dialog Enhancer is " + rtn);
@@ -161,7 +165,7 @@ public class JavaClass implements IDsClientEvents {
 		mVirtualizerActive = ! mVirtualizerActive;
 		mCurrSettings.setVirtualizerOn(mVirtualizerActive);
 		mDolbyClient.setProfileSettings(mCurrentProfileId, mCurrSettings);
-	
+
 		Log.v(TAG, "Toggling Surround Virtualizer - " + mVirtualizerActive);
 		return mVirtualizerActive;
 	}
