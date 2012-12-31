@@ -66,6 +66,8 @@ public class JavaClass implements IDsClientEvents {
 
 			mProfileCount = mDolbyClient.getProfileCount();
 			mProfileNames = mDolbyClient.getProfileNames();
+
+			Log.v(TAG, "Finished client connection");
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Exception setting profile: " + e.getMessage());
@@ -91,13 +93,6 @@ public class JavaClass implements IDsClientEvents {
 	@Override
 	public void onProfileSelected(int profile) {
 		Log.i(TAG, "Dolby profile changed, and the new profile is " + profile);
-		try {
-			mCurrentProfileId = profile;
-			mCurrSettings = mDolbyClient.getProfileSettings(profile);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -124,6 +119,7 @@ public class JavaClass implements IDsClientEvents {
 		mCurrentProfileId = (mCurrentProfileId + 1) % mProfileCount;
 		mDolbyClient.resetProfile(mCurrentProfileId);
 		mDolbyClient.setSelectedProfile(mCurrentProfileId);
+		mCurrSettings = mDolbyClient.getProfileSettings(mCurrentProfileId);
 
 		rtn = mProfileNames[mCurrentProfileId];
 		Log.v(TAG, "Cycling to profile " + mCurrentProfileId + ", " + rtn);
@@ -131,6 +127,9 @@ public class JavaClass implements IDsClientEvents {
 	}
 
 	public String getCurrentProfileName() {
+		if (mProfileNames == null) {
+			return "Unknown";
+		}
 		return mProfileNames[mCurrentProfileId];
 	}
 
