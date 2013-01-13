@@ -29,7 +29,7 @@ public class JavaClass implements IDsClientEvents {
 
 		mActivity = currentActivity;
 
-		// GKB: Needs to run on UI thread since DSClient requires a Handler()
+		// GKB: Needs to run on UI thread since DSClient requires a Handler(), which in turn requires a Looper thread (e.g. main)
 		mActivity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -54,7 +54,7 @@ public class JavaClass implements IDsClientEvents {
 
 	@Override
 	public void onClientConnected() {
-		Log.v(TAG, "Dolby client connected");
+		Log.v(TAG, "Dolby client connected...");
 		try {
 			mDolbyClient.setSelectedProfile(mCurrentProfileId);
 			mDdpActive = mDolbyClient.getDolbySurroundOn();

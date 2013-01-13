@@ -1,0 +1,15 @@
+
+GKB:
+To build all Java / C / NDK components, use the build_plugins.sh script.
+This script requires that $ANDROID_SDK_ROOT and $ANDROID_NDK_ROOT are defined
+to point to your local installation of the Android dev kits, for example:
+
+export ANDROID_SDK_ROOT=~/android-sdk-macosx
+export ANDROID_NDK_ROOT=~/android-ndk-r8b
+
+The build process uses JavaClass.java to create ../JavaClass.jar using javac, 
+and NativeJavaBridge.cpp to create ../libjavabridge.so using the Android NDK 
+build chain.
+
+Android.mk and Application.mk are standard files used by the Android NDK build
+process and contain various pointers to the above files.
