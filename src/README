@@ -1,4 +1,5 @@
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 GKB:
 To build all Java / C / NDK components, use the build_plugins.sh script.
 This script requires that $ANDROID_SDK_ROOT and $ANDROID_NDK_ROOT are defined
@@ -13,3 +14,16 @@ build chain.
 
 Android.mk and Application.mk are standard files used by the Android NDK build
 process and contain various pointers to the above files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Software layers, lowest to highest:
+
+DolbySurround.jar - API for DDP processing
+  |
+JavaClass.jar [JavaClass.java] - Java wrapper and control for Dolby lib
+  |
+libjavabridge.so [NativeJavaBridge.cpp] - Uses JNI to call from C into Java wrapper
+  |
+EnableDolbyDigitalPlus.cs &
+DolbyDigitalPlusOptionButtons.cs - C# wrappers that allow Unity game to call into C static lib
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
